@@ -3,14 +3,25 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Barry&#39;s Blog</title>
+  <title>Android】你可能还不知道的elevation、以及Z值等 | Barry&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Barry's Blog">
-<meta property="og:url" content="http://barryhappy.github.io/index.html">
+  <meta name="description" content="elevation、以及Z值——是什么？众所周知，with和height是所有View的基础属性。用一个二维坐标系来描述手机屏幕，那么它们就分别表示了View在坐标系上x、y方向上值 ——这是我们一直都习惯的自然表示。然而，从Android5.0(API21)开始，Google引入了一个z值，把二维坐标系强行改成了三维。  
+在Android API21，新添加了一个属性：android:elev">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android】你可能还不知道的elevation、以及Z值等">
+<meta property="og:url" content="http://barryhappy.github.io/2016/09/27/elevationAndZValue/index.html">
 <meta property="og:site_name" content="Barry's Blog">
+<meta property="og:description" content="elevation、以及Z值——是什么？众所周知，with和height是所有View的基础属性。用一个二维坐标系来描述手机屏幕，那么它们就分别表示了View在坐标系上x、y方向上值 ——这是我们一直都习惯的自然表示。然而，从Android5.0(API21)开始，Google引入了一个z值，把二维坐标系强行改成了三维。  
+在Android API21，新添加了一个属性：android:elev">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/422451-ff967532c79cc51e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/422451-92a1b4c446cf3949.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/422451-8b1ee8a52937f10c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2016-09-27T15:18:33.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Barry's Blog">
+<meta name="twitter:title" content="Android】你可能还不知道的elevation、以及Z值等">
+<meta name="twitter:description" content="elevation、以及Z值——是什么？众所周知，with和height是所有View的基础属性。用一个二维坐标系来描述手机屏幕，那么它们就分别表示了View在坐标系上x、y方向上值 ——这是我们一直都习惯的自然表示。然而，从Android5.0(API21)开始，Google引入了一个z值，把二维坐标系强行改成了三维。  
+在Android API21，新添加了一个属性：android:elev">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/422451-ff967532c79cc51e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
   
     <link rel="alternate" href="/atom.xml" title="Barry&#39;s Blog" type="application/atom+xml">
   
@@ -63,9 +74,7 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-    <article id="post-elevationAndZValue" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-elevationAndZValue" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2016/09/27/elevationAndZValue/" class="article-date">
   <time datetime="2016-09-27T15:15:57.000Z" itemprop="datePublished">2016-09-27</time>
@@ -78,8 +87,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/09/27/elevationAndZValue/">Android】你可能还不知道的elevation、以及Z值等</a>
+    <h1 class="article-title" itemprop="name">
+      Android】你可能还不知道的elevation、以及Z值等
     </h1>
   
 
@@ -126,92 +135,19 @@
     </footer>
   </div>
   
-</article>
-
-
+    
+<nav id="article-nav">
   
-    <article id="post-hello-from-hexo" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/08/28/hello-from-hexo/" class="article-date">
-  <time datetime="2016-08-28T13:51:29.000Z" itemprop="datePublished">2016-08-28</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/08/28/hello-from-hexo/">hello-from-hexo</a>
-    </h1>
+    <a href="/2016/08/28/hello-from-hexo/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Ancien</strong>
+      <div class="article-nav-title">hello-from-hexo</div>
+    </a>
   
+</nav>
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Hello , This is from hexo .</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://barryhappy.github.io/2016/08/28/hello-from-hexo/" data-id="citlmpinv0001vnp7ojfznjtv" class="article-share-link">Partager</a>
-      
-      
-    </footer>
-  </div>
   
 </article>
-
-
-  
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/08/24/hello-world/" class="article-date">
-  <time datetime="2016-08-24T06:23:15.000Z" itemprop="datePublished">2016-08-24</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/08/24/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://barryhappy.github.io/2016/08/24/hello-world/" data-id="citlmpiny0002vnp7ymslypri" class="article-share-link">Partager</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 </section>
         
