@@ -3,14 +3,29 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Barry&#39;s Blog</title>
+  <title>【Android】WebView：onReceiveError的应用以变迁 | Barry&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Barry's Blog">
-<meta property="og:url" content="http://barryhappy.github.io/index.html">
+  <meta name="description" content="[TOC]
+WebView——onReceiveError的应用以变迁onReceiveError是WebViewClient提供的方法，用于网页产生错误时进行回调处理。 
+1. 旧版的onReceiveError在API23之前，该方法的签名是：
+1public void onReceivedError(WebView view, int errorCode,String description">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Android】WebView：onReceiveError的应用以变迁">
+<meta property="og:url" content="http://barryhappy.github.io/2016/10/02/AndroidWebViewOnReceiveError/index.html">
 <meta property="og:site_name" content="Barry's Blog">
+<meta property="og:description" content="[TOC]
+WebView——onReceiveError的应用以变迁onReceiveError是WebViewClient提供的方法，用于网页产生错误时进行回调处理。 
+1. 旧版的onReceiveError在API23之前，该方法的签名是：
+1public void onReceivedError(WebView view, int errorCode,String description">
+<meta property="og:image" content="http://i.imgur.com/67ovWSv.png">
+<meta property="og:updated_time" content="2016-10-03T02:00:30.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Barry's Blog">
+<meta name="twitter:title" content="【Android】WebView：onReceiveError的应用以变迁">
+<meta name="twitter:description" content="[TOC]
+WebView——onReceiveError的应用以变迁onReceiveError是WebViewClient提供的方法，用于网页产生错误时进行回调处理。 
+1. 旧版的onReceiveError在API23之前，该方法的签名是：
+1public void onReceivedError(WebView view, int errorCode,String description">
+<meta name="twitter:image" content="http://i.imgur.com/67ovWSv.png">
   
     <link rel="alternate" href="/atom.xml" title="Barry&#39;s Blog" type="application/atom+xml">
   
@@ -63,9 +78,7 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-    <article id="post-AndroidWebViewOnReceiveError" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-AndroidWebViewOnReceiveError" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2016/10/02/AndroidWebViewOnReceiveError/" class="article-date">
   <time datetime="2016-10-02T15:53:55.000Z" itemprop="datePublished">2016-10-02</time>
@@ -78,8 +91,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/02/AndroidWebViewOnReceiveError/">【Android】WebView：onReceiveError的应用以变迁</a>
+    <h1 class="article-title" itemprop="name">
+      【Android】WebView：onReceiveError的应用以变迁
     </h1>
   
 
@@ -139,157 +152,19 @@
     </footer>
   </div>
   
-</article>
-
-
+    
+<nav id="article-nav">
   
-    <article id="post-elevationAndZValue" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/09/27/elevationAndZValue/" class="article-date">
-  <time datetime="2016-09-27T15:15:57.000Z" itemprop="datePublished">2016-09-27</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/09/27/elevationAndZValue/">【Android】你可能还不知道的elevation、以及Z值等</a>
-    </h1>
+    <a href="/2016/09/27/elevationAndZValue/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">【Android】你可能还不知道的elevation、以及Z值等</div>
+    </a>
   
+</nav>
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="elevation、以及Z值——是什么？"><a href="#elevation、以及Z值——是什么？" class="headerlink" title="elevation、以及Z值——是什么？"></a>elevation、以及Z值——是什么？</h2><p>众所周知，with和height是所有View的基础属性。用一个二维坐标系来描述手机屏幕，那么它们就分别表示了View在坐标系上x、y方向上值 ——这是我们一直都习惯的自然表示。<br>然而，从Android5.0(API21)开始，Google引入了一个z值，把二维坐标系强行改成了三维。  </p>
-<p>在Android API21，新添加了一个属性：<code>android:elevation</code>，用以在xml定义View的深度(高度)，也即z方向的值。<br>除了<code>elevation</code>之外，类似于已有的translationX、translationY，也相对应地新增了一个<code>translationZ</code>，用以在属性动画中动态改变Z值（使用View.setTranslationZ()）。 </p>
-<blockquote>
-<p>Z = elevation + translationZ</p>
-</blockquote>
-<h2 id="有什么用处呢？"><a href="#有什么用处呢？" class="headerlink" title="有什么用处呢？"></a>有什么用处呢？</h2><p>在引入了这个属性之后，主要影响有两个：</p>
-<ol>
-<li>影响View的阴影      </li>
-<li>影响View相互阻挡顺序</li>
-</ol>
-<h3 id="1-影响View的阴影"><a href="#1-影响View的阴影" class="headerlink" title="1. 影响View的阴影"></a>1. 影响View的阴影</h3><p>Z值会对View的阴影外观造成影响，但是不是对View大小造成影响。<br>拥有更大Z值的View会有一个更大但是更柔和的阴影——这跟我们生活的实际体验是一致的，官方给的效果图：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/422451-ff967532c79cc51e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="阴影效果"></p>
-<h3 id="2-影响View相互阻挡顺序"><a href="#2-影响View相互阻挡顺序" class="headerlink" title="2. 影响View相互阻挡顺序"></a>2. 影响View相互阻挡顺序</h3><p>拥有更大Z值的View会挡住Z值比较小的View——即更大Z值的View会在最上层。<br>譬如，在正常的FrameLayout中，子View的绘制顺序是从上到下，也就是说，最后一个子View会显示到最上面，如果位置跟前面的View有重合，则会盖住前面的View。 </p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">FrameLayout</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></div><div class="line">              <span class="attr">android:orientation</span>=<span class="string">"vertical"</span></div><div class="line">              <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></div><div class="line">              <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span>&gt;</div><div class="line">    <span class="tag">&lt;<span class="name">TextView</span></span></div><div class="line">        <span class="attr">android:id</span>=<span class="string">"@+id/viewA"</span></div><div class="line">        <span class="attr">android:background</span>=<span class="string">"#f00"</span></div><div class="line">        <span class="attr">android:text</span>=<span class="string">"A"</span></div><div class="line">        <span class="attr">android:gravity</span>=<span class="string">"center"</span></div><div class="line">        <span class="attr">android:layout_width</span>=<span class="string">"100dp"</span></div><div class="line">        <span class="attr">android:layout_height</span>=<span class="string">"100dp"</span> /&gt;</div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">TextView</span></span></div><div class="line">        <span class="attr">android:id</span>=<span class="string">"@+id/viewB"</span></div><div class="line">        <span class="attr">android:background</span>=<span class="string">"#0f0"</span></div><div class="line">        <span class="attr">android:text</span>=<span class="string">"B"</span></div><div class="line">        <span class="attr">android:gravity</span>=<span class="string">"center"</span></div><div class="line">        <span class="attr">android:layout_marginLeft</span>=<span class="string">"60dp"</span></div><div class="line">        <span class="attr">android:layout_marginTop</span>=<span class="string">"60dp"</span></div><div class="line">        <span class="attr">android:layout_width</span>=<span class="string">"100dp"</span></div><div class="line">        <span class="attr">android:layout_height</span>=<span class="string">"100dp"</span> /&gt;</div><div class="line"></div><div class="line">    <span class="comment">&lt;!--ViewC有了一个elevation属性 --&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">TextView</span></span></div><div class="line">        <span class="attr">android:id</span>=<span class="string">"@+id/viewC"</span></div><div class="line">        <span class="attr">android:layout_marginLeft</span>=<span class="string">"180dp"</span></div><div class="line">        <span class="attr">android:background</span>=<span class="string">"#f00"</span></div><div class="line">        <span class="attr">android:text</span>=<span class="string">"C"</span></div><div class="line">        <span class="attr">android:gravity</span>=<span class="string">"center"</span></div><div class="line">        <span class="attr">android:elevation</span>=<span class="string">"1dp"</span></div><div class="line">        <span class="attr">android:layout_width</span>=<span class="string">"100dp"</span></div><div class="line">        <span class="attr">android:layout_height</span>=<span class="string">"100dp"</span> /&gt;</div><div class="line">    <span class="tag">&lt;<span class="name">TextView</span></span></div><div class="line">        <span class="attr">android:id</span>=<span class="string">"@+id/viewD"</span></div><div class="line">        <span class="attr">android:background</span>=<span class="string">"#0f0"</span></div><div class="line">        <span class="attr">android:text</span>=<span class="string">"D"</span></div><div class="line">        <span class="attr">android:gravity</span>=<span class="string">"center"</span></div><div class="line">        <span class="attr">android:layout_marginLeft</span>=<span class="string">"240dp"</span></div><div class="line">        <span class="attr">android:layout_marginTop</span>=<span class="string">"60dp"</span></div><div class="line">        <span class="attr">android:layout_width</span>=<span class="string">"100dp"</span></div><div class="line">        <span class="attr">android:layout_height</span>=<span class="string">"100dp"</span> /&gt;</div><div class="line"><span class="tag">&lt;/<span class="name">FrameLayout</span>&gt;</span></div></pre></td></tr></table></figure>
-<p>比如，上面的xml代码，效果如下图所示：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/422451-92a1b4c446cf3949.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="对比图"></p>
-<ul>
-<li>先看ViewA、ViewB，因为ViewB是第二个子View，ViewA是第一个，所以B会覆盖在A的上面。 </li>
-<li>然后ViewC、D，跟AB相比较，区别就在于ViewC多了一个elevation属性，有了一个比ViewD更大的Z值，所以，即使它在ViewD的前面，但是依然能够盖住D~ （ViewC：因为朕站的更高，哇哈哈~ ）</li>
-</ul>
-<h2 id="还有CardView"><a href="#还有CardView" class="headerlink" title="还有CardView"></a>还有CardView</h2><p>为什么会提到CardView呢？因为CardView可以算作是一个官方使用的Z值的示例了。 </p>
-<blockquote>
-<p>CardView 扩展 FrameLayout 类别并让您能够显示卡片内的信息，这些信息在整个平台中拥有一致的呈现方式。CardView 小组件可拥有阴影和圆角。</p>
-</blockquote>
-<p>CardView是在v7支持包里面的，在API<21时，实现方式是padding+绘制阴影；而在在api>=21时，就是用elevation属性来实现的啦！</21时，实现方式是padding+绘制阴影；而在在api></p>
-<p>知道了这些，也可以解释一些以前觉得诡异的View覆盖的问题了，比如：我明明在CardView的上层放了一个Button，为什么Button看不到了？？？<br>（傻孩子，因为CardView默认的elevation的呀）</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/422451-8b1ee8a52937f10c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<hr>
-<p>可能有用的链接：<br><a href="https://developer.android.com/training/material/shadows-clipping.html" target="_blank" rel="external">https://developer.android.com/training/material/shadows-clipping.html</a><br><a href="https://developer.android.com/training/material/lists-cards.html" target="_blank" rel="external">https://developer.android.com/training/material/lists-cards.html</a><br><a href="https://developer.android.com/reference/android/support/v7/widget/CardView.html" target="_blank" rel="external">https://developer.android.com/reference/android/support/v7/widget/CardView.html</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://barryhappy.github.io/2016/09/27/elevationAndZValue/" data-id="citte3vly0002o0p7bzx144kq" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
   
 </article>
-
-
-  
-    <article id="post-hello-from-hexo" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/08/28/hello-from-hexo/" class="article-date">
-  <time datetime="2016-08-28T13:51:29.000Z" itemprop="datePublished">2016-08-28</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/08/28/hello-from-hexo/">hello-from-hexo</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Hello , This is from hexo .</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://barryhappy.github.io/2016/08/28/hello-from-hexo/" data-id="citte3vm10003o0p7hv6bd5br" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/08/24/hello-world/" class="article-date">
-  <time datetime="2016-08-24T06:23:15.000Z" itemprop="datePublished">2016-08-24</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/08/24/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://barryhappy.github.io/2016/08/24/hello-world/" data-id="citte3vlw0001o0p7ekruioox" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 </section>
         
