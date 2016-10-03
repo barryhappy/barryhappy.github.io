@@ -5,26 +5,26 @@
   
   <title>【Android】WebView：onReceiveError的应用以变迁 | Barry&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="[TOC]
-WebView——onReceiveError的应用以变迁onReceiveError是WebViewClient提供的方法，用于网页产生错误时进行回调处理。 
+  <meta name="description" content="onReceiveError是WebViewClient提供的方法，用于网页产生错误时进行回调处理。
 1. 旧版的onReceiveError在API23之前，该方法的签名是：
-1public void onReceivedError(WebView view, int errorCode,String description">
+1public void onReceivedError(WebView view, int errorCode,String description, String failingUrl);
+文档是：">
 <meta property="og:type" content="article">
 <meta property="og:title" content="【Android】WebView：onReceiveError的应用以变迁">
 <meta property="og:url" content="http://barryhappy.github.io/2016/10/02/AndroidWebViewOnReceiveError/index.html">
 <meta property="og:site_name" content="Barry's Blog">
-<meta property="og:description" content="[TOC]
-WebView——onReceiveError的应用以变迁onReceiveError是WebViewClient提供的方法，用于网页产生错误时进行回调处理。 
+<meta property="og:description" content="onReceiveError是WebViewClient提供的方法，用于网页产生错误时进行回调处理。
 1. 旧版的onReceiveError在API23之前，该方法的签名是：
-1public void onReceivedError(WebView view, int errorCode,String description">
+1public void onReceivedError(WebView view, int errorCode,String description, String failingUrl);
+文档是：">
 <meta property="og:image" content="http://i.imgur.com/67ovWSv.png">
-<meta property="og:updated_time" content="2016-10-03T02:00:30.000Z">
+<meta property="og:updated_time" content="2016-10-03T02:29:55.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【Android】WebView：onReceiveError的应用以变迁">
-<meta name="twitter:description" content="[TOC]
-WebView——onReceiveError的应用以变迁onReceiveError是WebViewClient提供的方法，用于网页产生错误时进行回调处理。 
+<meta name="twitter:description" content="onReceiveError是WebViewClient提供的方法，用于网页产生错误时进行回调处理。
 1. 旧版的onReceiveError在API23之前，该方法的签名是：
-1public void onReceivedError(WebView view, int errorCode,String description">
+1public void onReceivedError(WebView view, int errorCode,String description, String failingUrl);
+文档是：">
 <meta name="twitter:image" content="http://i.imgur.com/67ovWSv.png">
   
     <link rel="alternate" href="/atom.xml" title="Barry&#39;s Blog" type="application/atom+xml">
@@ -100,8 +100,7 @@ WebView——onReceiveError的应用以变迁onReceiveError是WebViewClient提�
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>[TOC]</p>
-<h1 id="WebView——onReceiveError的应用以变迁"><a href="#WebView——onReceiveError的应用以变迁" class="headerlink" title="WebView——onReceiveError的应用以变迁"></a>WebView——onReceiveError的应用以变迁</h1><p>onReceiveError是WebViewClient提供的方法，用于网页产生错误时进行回调处理。 </p>
+        <p><code>onReceiveError</code>是WebViewClient提供的方法，用于网页产生错误时进行回调处理。</p>
 <h2 id="1-旧版的onReceiveError"><a href="#1-旧版的onReceiveError" class="headerlink" title="1. 旧版的onReceiveError"></a>1. 旧版的onReceiveError</h2><p>在API23之前，该方法的签名是：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onReceivedError</span><span class="params">(WebView view, <span class="keyword">int</span> errorCode,String description, String failingUrl)</span></span>;</div></pre></td></tr></table></figure>
 <p>文档是：          </p>
@@ -146,7 +145,7 @@ WebView——onReceiveError的应用以变迁onReceiveError是WebViewClient提�
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://barryhappy.github.io/2016/10/02/AndroidWebViewOnReceiveError/" data-id="citte3vlr0000o0p7zcuy1221" class="article-share-link">Share</a>
+      <a data-url="http://barryhappy.github.io/2016/10/02/AndroidWebViewOnReceiveError/" data-id="cittfv36400004xp73q2nvzi0" class="article-share-link">Share</a>
       
       
     </footer>
