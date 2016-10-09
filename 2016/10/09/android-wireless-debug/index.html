@@ -1,0 +1,54 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 【Android】真机调试新姿势：无线连接 · Barry's Blog</title><meta name="description" content="【Android】真机调试新姿势：无线连接 - Barry Zhang"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="short icon" href="https://avatars0.githubusercontent.com/u/5143676?v=3&amp;s=466"><link rel="stylesheet" href="/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="http://barryhappy.github.io/atom.xml" title="Barry's Blog"></head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="https://avatars0.githubusercontent.com/u/5143676?v=3&amp;s=466"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="https://github.com/barryhappy" target="_blank" class="nav-list-link">GITHUB</a></li><li class="nav-list-item"><a href="/atom.xml" target="_self" class="nav-list-link">RSS</a></li><li class="nav-list-item"><a href="http://www.barryzhang.com/" target="_blank" class="nav-list-link">BARRYZHANG</a></li></ul></header><section class="container"><div class="post"><article class="post-block"><h1 class="post-title">【Android】真机调试新姿势：无线连接</h1><div class="post-info">2016年10月9日</div><div class="post-content"><p>在进行Android开发时，一般我们都是用usb线把手机和电脑连接起来进行调试工作。但如果你觉得这样不够酷的话，可以尝试一下无线连接，颇简单，GO！<br><a id="more"></a></p>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><ul>
+<li>手机和电脑需要在同一个局域网  </li>
+<li>准备一条数据线——（what？不是说无线连接吗？！别着急，这只是第一次设置时用到的，以后再连接就不需要数据线了）</li>
+<li>你需要知道怎么执行adb命令（不知道的话请自行Google）</li>
+</ul>
+<h2 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h2><h3 id="1-打开手机的5555端口"><a href="#1-打开手机的5555端口" class="headerlink" title="1. 打开手机的5555端口"></a>1. 打开手机的5555端口</h3><p>让手机在指定的端口可以接收到TCP/IP连接。（当然，也可以不用5555，用5556或者9999等都可以，只要你喜欢）</p>
+<ol>
+<li>确保手机开启了usb调试</li>
+<li>用usb线把手机和电脑连接起来</li>
+<li><p>执行命令：</p>
+<p> <code>adb tcpip 5555</code></p>
+</li>
+</ol>
+<p>执行成功后就可以把usb线拔掉了。</p>
+<h3 id="2-找到手机的IP地址"><a href="#2-找到手机的IP地址" class="headerlink" title="2. 找到手机的IP地址"></a>2. 找到手机的IP地址</h3><p>一般在 <strong>设置-关于手机-状态信息-IP地址</strong>可以找到。<br>比如，我这里看到手机的IP地址是<em>192.168.1.108</em></p>
+<h3 id="3-通过IP地址和端口连接手机"><a href="#3-通过IP地址和端口连接手机" class="headerlink" title="3. 通过IP地址和端口连接手机"></a>3. 通过IP地址和端口连接手机</h3><p>执行命令：<br>    <code>adb connect 192.168.1.108:5555</code></p>
+<p>3.1 如果提示</p>
+<blockquote>
+<p>connected to 192.168.1.108:5555</p>
+</blockquote>
+<p>则表示连接成功</p>
+<p>3.2 如果提示</p>
+<blockquote>
+<p>unable to connect to 192.168.1.108:5555: Operation timed out</p>
+</blockquote>
+<p>——可能你的IP地址输错了;或者adb服务不可用;或者手机跟电脑没有正确地处在一个局域网中；或者链接被代理Block了等等等…</p>
+<p>3.3 如果提示 </p>
+<blockquote>
+<p>unable to connect to 192.168.1.108:5555: Connection refused</p>
+</blockquote>
+<p>—— 可能你手机的5555端口没有正确打开；或者有防火墙拦截等…</p>
+<h3 id="4-如果没有连接成功"><a href="#4-如果没有连接成功" class="headerlink" title="4. 如果没有连接成功"></a>4. 如果没有连接成功</h3><p>如果出现了3.2或3.3的错误提示，或者其他任何错误，都可以尝试重启一下adb服务：</p>
+<blockquote>
+<p>adb kill-server</p>
+</blockquote>
+<p>然后再重新进行尝试。</p>
+<h3 id="5-连接成功"><a href="#5-连接成功" class="headerlink" title="5. 连接成功"></a>5. 连接成功</h3><p>如果连接成功的话，执行以下命令查看当前连接的设备列表：<br>    <code>adb devices</code><br>可以看到连接的设备，像这样</p>
+<blockquote>
+<p>$ adb devices<br>List of devices attached<br>192.168.1.108:5555      device</p>
+</blockquote>
+<p>——恭喜你，从此可以摆脱对数据线的依赖了。</p>
+<h2 id="总结-amp-其他"><a href="#总结-amp-其他" class="headerlink" title="总结&amp;其他"></a>总结&amp;其他</h2><ol>
+<li>更换一个网络环境（比如把手机和电脑从公司带回了家里），一般只需要按照新的手机IP重新进行一下connect即可。 </li>
+<li>但是如果手机重启了，就需要重新<strong>连接数据线</strong>再次开启5555端口了。</li>
+<li>当然开启5555端口也并非必须通过adb，也有一些方法可以直接在手机上操作打开。但这些方法一般都需要root权限，如果你想要尝试在手机上进行开启，请注意安全。</li>
+<li>有利就有弊——无线调试较有线调试而言，优势自不必说，缺点是无线数据的传输会比有线要慢一些。</li>
+<li>还有一点，自从用了无线调试之后，我那常年满电的测试机，现在需要时不时的进行充电了~~~<br>o(╯□╰)o</li>
+</ol>
+<hr>
+<p>有用的链接：<br><a href="https://developer.android.com/studio/command-line/adb.html" target="_blank" rel="external">https://developer.android.com/studio/command-line/adb.html</a><br><a href="http://stackoverflow.com/questions/23936781/unable-to-connect-android-device-over-adb-tcp-ip" target="_blank" rel="external">http://stackoverflow.com/questions/23936781/unable-to-connect-android-device-over-adb-tcp-ip</a></p>
+<hr>
+<p>Also in:<br><a href="http://www.barryzhang.com" target="_blank" rel="external">http://www.barryzhang.com</a><br><a href="https://barryhappy.github.io">https://barryhappy.github.io</a><br><a href="http://www.jianshu.com/users/e4607fd59d0d/latest_articles" target="_blank" rel="external">http://www.jianshu.com/users/e4607fd59d0d/latest_articles</a><br><a href="http://blog.csdn.net/barryhappy" target="_blank" rel="external">http://blog.csdn.net/barryhappy</a></p>
+</div></article></div></section><footer><div class="paginator"><a href="/2016/10/02/AndroidWebViewOnReceiveError/" class="next">下一篇</a></div><div class="copyright"><p>© 2015 - 2016 <a href="http://barryhappy.github.io">Barry Zhang</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-65933410-1",'auto');ga('send','pageview');</script></body></html>
