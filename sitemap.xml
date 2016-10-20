@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://barryhappy.github.io/2016/10/20/start-kotlin-in-5-mins/</loc>
+    
+    <lastmod>2016-10-20T16:35:49.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://barryhappy.github.io/2016/10/21/why-we-need-kotlin/</loc>
+    
+    <lastmod>2016-10-20T16:35:40.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://barryhappy.github.io/2016/08/28/hello-from-hexo/</loc>
     
     <lastmod>2016-10-09T07:13:33.000Z</lastmod>
