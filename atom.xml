@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://barryhappy.github.io/"/>
-  <updated>2016-10-20T16:35:40.000Z</updated>
+  <updated>2016-10-20T16:36:49.000Z</updated>
   <id>http://barryhappy.github.io/</id>
   
   <author>
@@ -20,10 +20,9 @@
     <link href="http://barryhappy.github.io/2016/10/21/why-we-need-kotlin/"/>
     <id>http://barryhappy.github.io/2016/10/21/why-we-need-kotlin/</id>
     <published>2016-10-20T16:34:08.000Z</published>
-    <updated>2016-10-20T16:35:40.000Z</updated>
+    <updated>2016-10-20T16:36:49.000Z</updated>
     
-    <content type="html"><![CDATA[<p>[TOC]</p>
-<p>在使用Kotlin进行了一段时间的Android开发之后，我深深地体验到了它的美好，觉得是时候把它拿出来安利一下了。<br><a id="more"></a></p>
+    <content type="html"><![CDATA[<p>在使用Kotlin进行了一段时间的Android开发之后，我深深地体验到了它的美好，觉得是时候把它拿出来安利一下了。<br><a id="more"></a></p>
 <h1 id="1-Kotlin是什么？"><a href="#1-Kotlin是什么？" class="headerlink" title="1. Kotlin是什么？"></a>1. Kotlin是什么？</h1><p>Kotlin是一门编程语言，由JetBrains公司开发的。JetBrains就是那个开发了无数个牛逼IDE的公司，Android Studio就是建立在他家的Intellij之上的。<br>Kotlin是基于JVM的，所以开发者可以什么方便地用它来进行Android开发——支持Kotlin和Java的混合编写。</p>
 <h1 id="2-为什么要使用Kotlin？"><a href="#2-为什么要使用Kotlin？" class="headerlink" title="2. 为什么要使用Kotlin？"></a>2. 为什么要使用Kotlin？</h1><p>我觉得它之所以适合Android开发，主要是因为以下的特点：</p>
 <h2 id="2-1-简洁、优雅"><a href="#2-1-简洁、优雅" class="headerlink" title="2.1 简洁、优雅"></a>2.1 简洁、优雅</h2><p>写了很多年的Java之后，再写Kotlin，真是觉得如沐春风。<br>除了<code>不用写分号</code>以及天然<code>支持Lambda表达式</code>之外，它的语法本身就比Java简洁许多。 </p>
@@ -65,8 +64,7 @@
     
     <summary type="html">
     
-      &lt;p&gt;[TOC]&lt;/p&gt;
-&lt;p&gt;在使用Kotlin进行了一段时间的Android开发之后，我深深地体验到了它的美好，觉得是时候把它拿出来安利一下了。&lt;br&gt;
+      &lt;p&gt;在使用Kotlin进行了一段时间的Android开发之后，我深深地体验到了它的美好，觉得是时候把它拿出来安利一下了。&lt;br&gt;
     
     </summary>
     
