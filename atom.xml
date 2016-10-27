@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://barryhappy.github.io/"/>
-  <updated>2016-10-26T15:57:33.000Z</updated>
+  <updated>2016-10-27T11:07:43.000Z</updated>
   <id>http://barryhappy.github.io/</id>
   
   <author>
@@ -16,13 +16,16 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Android软键盘挡住输入框的问题，终极解决方案</title>
+    <title>Android爬坑之旅：软键盘挡住输入框问题的终极解决方案</title>
     <link href="http://barryhappy.github.io/2016/10/26/what-if-keyboard-hide-input-view/"/>
     <id>http://barryhappy.github.io/2016/10/26/what-if-keyboard-hide-input-view/</id>
     <published>2016-10-26T15:26:43.000Z</published>
-    <updated>2016-10-26T15:57:33.000Z</updated>
+    <updated>2016-10-27T11:07:43.000Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>开发做得久了，总免不了会遇到各种坑。<br>而在Android开发的路上，『软键盘挡住了输入框』这个坑，可谓是一个旷日持久的巨坑——来来来，我们慢慢看。</p>
+    <content type="html"><![CDATA[<blockquote>
+<p>本文由<a href="https://github.com/barryhappy" target="_blank" rel="external">BarryZhang</a>原创，同时首发于diycode.cc、barryzhang.com 、github.com/barryhappy，非商业转载请注明作者和原文链接。</p>
+</blockquote>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>开发做得久了，总免不了会遇到各种坑。<br>而在Android开发的路上，『软键盘挡住了输入框』这个坑，可谓是一个旷日持久的巨坑——来来来，我们慢慢看。</p>
 <a id="more"></a> 
 <h1 id="入门篇"><a href="#入门篇" class="headerlink" title="入门篇"></a>入门篇</h1><p><img src="http://barryzhang.qiniudn.com/QQ20161024-0.png" alt="Base"></p>
 <p>最基本的情况，如图所示：在页面底部有一个EditText，如果不做任何处理，那么在软键盘弹出的时候，就有可能会挡住EditText。<br>对于这种情况的处理其实很简单，只需要在AndroidManifest文件中对activity设置：<code>android:windowSoftInputMode</code>的值<code>adjustPan</code>或者<code>adjustResize</code>即可，像这样：</p>
@@ -106,7 +109,10 @@
     
     <summary type="html">
     
-      &lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;开发做得久了，总免不了会遇到各种坑。&lt;br&gt;而在Android开发的路上，『软键盘挡住了输入框』这个坑，可谓是一个旷日持久的巨坑——来来来，我们慢慢看。&lt;/p&gt;
+      &lt;blockquote&gt;
+&lt;p&gt;本文由&lt;a href=&quot;https://github.com/barryhappy&quot;&gt;BarryZhang&lt;/a&gt;原创，同时首发于diycode.cc、barryzhang.com 、github.com/barryhappy，非商业转载请注明作者和原文链接。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;开发做得久了，总免不了会遇到各种坑。&lt;br&gt;而在Android开发的路上，『软键盘挡住了输入框』这个坑，可谓是一个旷日持久的巨坑——来来来，我们慢慢看。&lt;/p&gt;
     
     </summary>
     
