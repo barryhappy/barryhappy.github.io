@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://barryhappy.github.io/"/>
-  <updated>2016-10-27T11:07:43.000Z</updated>
+  <updated>2016-11-19T05:07:57.000Z</updated>
   <id>http://barryhappy.github.io/</id>
   
   <author>
@@ -14,6 +14,103 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>彻底搞懂startActivityForResult在FragmentActivity和Fragment中的异同</title>
+    <link href="http://barryhappy.github.io/2016/11/19/difference-of-startactivityforresult-bettwen-fragment-activity/"/>
+    <id>http://barryhappy.github.io/2016/11/19/difference-of-startactivityforresult-bettwen-fragment-activity/</id>
+    <published>2016-11-19T05:03:05.000Z</published>
+    <updated>2016-11-19T05:07:57.000Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="1-前言"><a href="#1-前言" class="headerlink" title="1. 前言"></a>1. 前言</h1><p>Activity、FragmentActivity、Fragment中都有<code>startActivityForResult()</code>方法，也都有用以接收结果的<code>onActivityResult()</code>方法，那他们有什么区别吗？用法上有什么不同吗？</p>
+<p>之所以注意到这个问题，是因为最近一次在Fragment中使用了getActivity().startActivityForResult()去调用图片选择器，结果发现在Fragment的onActivityResult无法接收到返回的结果。</p>
+<p>仔细研究了一下原因，发现了一些以前没注意到的问题，于是写出来分享给大家。</p>
+<a id="more"></a>
+<h1 id="2-表现"><a href="#2-表现" class="headerlink" title="2. 表现"></a>2. 表现</h1><p>假设有一个FragmentActivity中嵌套一个Fragment，它们各自使用startActivityForResult发起数据请求。<br>经测，目标所返回结果数据，能否被它们各自的onActivityResult方法所接收的情况如下：</p>
+<p><img src="http://ww1.sinaimg.cn/large/006tNc79jw1f9xbehy112j30ks02tjrv.jpg" alt="image1">￼</p>
+<ul>
+<li>Fragment和FragmentActivity都能接收到自己的发起的请求所返回的结果</li>
+<li>FragmentActivity发起的请求，Fragment完全接收不到结果</li>
+<li>Fragment发起的请求，虽然在FragmentActivity中能获取到结果，但是requestCode完全对应不上</li>
+</ul>
+<p>为什么会有这种表现呢？往下看。</p>
+<h1 id="3-找原因：Show-me-your-code"><a href="#3-找原因：Show-me-your-code" class="headerlink" title="3. 找原因：Show me your code !"></a>3. 找原因：Show me your code !</h1><p>仔细看文档的话，发现了一个以前没注意到的点：<strong>FragmentActivity相对于它的父类Activity，对startActivityForResult的描述是有些改动的。</strong></p>
+<p>FragmentActivity.startActivityForResult的文档是这样的：</p>
+<blockquote>
+<p>修改了标准行为，以使它能够把结果传递到Fragment。<br><strong>添加了一个限制：requestCode必须&lt;=0xffff</strong></p>
+</blockquote>
+<p>这里的<code>标准行为</code>，自然指的是正常的Activity.startActivityForResult的功能。而新增加的对requestCode的大小限制看起来很蹊跷，估计是有什么猫腻在里面了。   </p>
+<p>OK，不卖关子，直接看源码！</p>
+<h2 id="3-1-Fragment-startActivityForResult"><a href="#3-1-Fragment-startActivityForResult" class="headerlink" title="3.1 Fragment.startActivityForResult"></a>3.1 <code>Fragment.startActivityForResult</code></h2><p>从Fragment的startActivityForResult开始：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">startActivityForResult</span><span class="params">(Intent intent, <span class="keyword">int</span> requestCode, @Nullable Bundle options)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (mHost == <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Fragment "</span> + <span class="keyword">this</span> + <span class="string">" not attached to Activity"</span>);</div><div class="line">    &#125;</div><div class="line">    mHost.onStartActivityFromFragment(<span class="keyword">this</span> <span class="comment">/*fragment*/</span>, intent, requestCode, options);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>Fragment.startActivityForResult本身的代码很简单，就是调用了一个mHost.onStartActivityFromFragment的方法。<br>—— Fragment被添加到一个FragmentActivity中之后，这里的mHost即是当前FragmentActivity的一个内部类FragmentActivity.HostCallbacks，它持有对FragmentActivity的引用，mHost.onStartActivityFromFragment被简单转发到当前FragmentActivity的<br>startActivityFromFragment()方法。</p>
+<blockquote>
+<p>Fragment.startActivityForResult<br>↓<br>FragmentActivitymHost.HostCallbacks.onStartActivityFromFragment<br>↓<br>FragmentActivity.startActivityFromFragment</p>
+</blockquote>
+<p>接下来到FragmentActivity.startActivityFromFragment：</p>
+<h2 id="3-2-FragmentActivity-startActivityFromFragment"><a href="#3-2-FragmentActivity-startActivityFromFragment" class="headerlink" title="3.2 FragmentActivity.startActivityFromFragment"></a>3.2 <code>FragmentActivity.startActivityFromFragment</code></h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">startActivityFromFragment</span><span class="params">(Fragment fragment, Intent intent,</span></span></div><div class="line">        <span class="keyword">int</span> requestCode, @Nullable Bundle options) &#123;</div><div class="line">    mStartedActivityFromFragment = <span class="keyword">true</span>;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        <span class="keyword">if</span> (requestCode == -<span class="number">1</span>) &#123;</div><div class="line">            ActivityCompat.startActivityForResult(<span class="keyword">this</span>, intent, -<span class="number">1</span>, options);</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> ((requestCode&amp;<span class="number">0xffff0000</span>) != <span class="number">0</span>) &#123;</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Can only use lower 16 bits for requestCode"</span>);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">int</span> requestIndex = allocateRequestIndex(fragment);</div><div class="line">        ActivityCompat.startActivityForResult(</div><div class="line">            <span class="keyword">this</span>, intent, ((requestIndex+<span class="number">1</span>)&lt;&lt;<span class="number">16</span>) + (requestCode&amp;<span class="number">0xffff</span>), options);</div><div class="line">    &#125; <span class="keyword">finally</span> &#123;</div><div class="line">        mStartedActivityFromFragment = <span class="keyword">false</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>分析一下这段代码：<br>1，<code>mStartedActivityFromFragment = true</code>首先标记一下请求是来自于Fragment。<br>2，<code>if(requestCode == 1)</code>的内容不用管，它是来自于startActivity（没有ForResult）的情况。<br>3，然后的代码添加了对requestCode必须小于0xffff的限制 <code>if((requestCode&amp;0xffff0000) ！= 0){/*抛异常*/}</code><br>    我们是从Fragment.startActivityForResult追踪到这里的，所以虽然文档没有明确说，但是从这里可以看出：<strong>Fragment.startActivityForResult的requestCode也是必须要&lt;=0xffff的。</strong></p>
+<p><strong>然后，下面是关键点了：</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ActivityCompat.startActivityForResult(</div><div class="line">            <span class="keyword">this</span>, intent, ((requestIndex+<span class="number">1</span>)&lt;&lt;<span class="number">16</span>) + (requestCode&amp;<span class="number">0xffff</span>), options);</div></pre></td></tr></table></figure></p>
+<p>——其中ActivityCompat是一个帮助类，ActivityCompat.startActivityForResult最终还是调用的Activity.startActivityForResult，这个先不表。<br>这里的关键点就是，通过一个<code>requestCode</code>=&gt;<code>((requestIndex+1)&lt;&lt;16)+(requestCode&amp;0xffff)</code>的映射，Fragment.startActivityForResult最终还是调用了Activity.startActivityForResult。 </p>
+<p>调用了Activity.startActivityForResult其实是意料之中的事情，只是从<code>requestCode</code>到<code>((requestIndex+1)&lt;&lt;16)+(requestCode&amp;0xffff)</code>是做了什么呢？</p>
+<p>通过分析，得知requestIndex是请求的序号，值为从0递增的整数值。<br>又从前面得知，requestCode的本身的值是小于0xffff的，所以((requestIndex+1)&lt;&lt;16)+(requestCode&amp;0xffff)简化一下就是：<code>(requestIndex+1)*65536+requestCode</code>。<br><strong>——所以这个值是必定大于0xffff的。</strong></p>
+<p>在看一下FragmentActivity.startActivityForResult的代码：</p>
+<h2 id="3-3-FragmentActivity-startActivityForResult"><a href="#3-3-FragmentActivity-startActivityForResult" class="headerlink" title="3.3 FragmentActivity.startActivityForResult"></a>3.3 <code>FragmentActivity.startActivityForResult</code></h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">startActivityForResult</span><span class="params">(Intent intent, <span class="keyword">int</span> requestCode)</span> </span>&#123;</div><div class="line">    <span class="comment">// If this was started from a Fragment we've already checked the upper 16 bits were not in</span></div><div class="line">    <span class="comment">// use, and then repurposed them for the Fragment's index.</span></div><div class="line">    <span class="keyword">if</span> (!mStartedActivityFromFragment) &#123;</div><div class="line">        <span class="keyword">if</span> (requestCode != -<span class="number">1</span> &amp;&amp; (requestCode&amp;<span class="number">0xffff0000</span>) != <span class="number">0</span>) &#123;</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Can only use lower 16 bits for requestCode"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">super</span>.startActivityForResult(intent, requestCode);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>可以看到，判断了一下如果请求不是来自于Fragment，也就是来自于FragmentActivity自身，就限制requestCode不能大于0xffff。</p>
+<p>再加上前文所说的，Fragment.startActivityForResult最终映射的requestCode值必定大于0xffff，所以，现在可以得出了一个初步的结果：<br><strong>SDK把Fragment和FragmentActivity的的ruquestCode都限制在了0xffff以内，然后对于Fragment所发起的请求，都通过一个映射，把最终的requestCode变成了一个大于0xffff的值。</strong></p>
+<p>——到现在，已经可以推测到：<strong>在获取的结果的时候，也是会通过跟0xffff这个数值来比较，来区分是要把结果交给FragmentActivity还是Fragment来处理。</strong></p>
+<p>来验证一下看看：</p>
+<h2 id="3-4-FragmentActivity-onActivityResult"><a href="#3-4-FragmentActivity-onActivityResult" class="headerlink" title="3.4 FragmentActivity.onActivityResult"></a>3.4 <code>FragmentActivity.onActivityResult</code></h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onActivityResult</span><span class="params">(<span class="keyword">int</span> requestCode, <span class="keyword">int</span> resultCode, Intent data)</span> </span>&#123;</div><div class="line">    mFragments.noteStateNotSaved();</div><div class="line">    <span class="keyword">int</span> requestIndex = requestCode&gt;&gt;<span class="number">16</span>;</div><div class="line">    <span class="keyword">if</span> (requestIndex != <span class="number">0</span>) &#123;</div><div class="line">        requestIndex--;</div><div class="line"></div><div class="line">        String who = mPendingFragmentActivityResults.get(requestIndex);</div><div class="line">        mPendingFragmentActivityResults.remove(requestIndex);</div><div class="line">        <span class="keyword">if</span> (who == <span class="keyword">null</span>) &#123;</div><div class="line">            Log.w(TAG, <span class="string">"Activity result delivered for unknown Fragment."</span>);</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125;</div><div class="line">        Fragment targetFragment = mFragments.findFragmentByWho(who);</div><div class="line">        <span class="keyword">if</span> (targetFragment == <span class="keyword">null</span>) &#123;</div><div class="line">            Log.w(TAG, <span class="string">"Activity result no fragment exists for who: "</span> + who);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            targetFragment.onActivityResult(requestCode&amp;<span class="number">0xffff</span>, resultCode, data);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">super</span>.onActivityResult(requestCode, resultCode, data);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>OK，一目了然，<strong>证实了我们上面的推论</strong>。<br>在FragmentActivity.onActivityResult中，只有requestCode&gt;0xffff时，这里得到的requestIndex才能满足<code>requestIndex != 0</code>，然后进入下面的逻辑：把requestCode通过反向之前的映射关系，还原成最初Fragment所指定的requestCode，交给Fragment.onActivityResult进行处理。</p>
+<h1 id="4-解释最初的问题"><a href="#4-解释最初的问题" class="headerlink" title="4. 解释最初的问题"></a>4. 解释最初的问题</h1><p>所以，现在也能明白了为什么会有前面说的这几个表现：</p>
+<ol>
+<li><p>Fragment和FragmentActivity都能接收到自己的发起的请求所返回的结果</p>
+<blockquote>
+<p>那当然，就是这么设计的。</p>
+</blockquote>
+</li>
+<li><p>FragmentActivity发起的请求，Fragment完全接收不到结果</p>
+<blockquote>
+<p>被FragmentActivity拦截了，没有转发到Fragment。</p>
+</blockquote>
+</li>
+<li><p>Fragment发起的请求，虽然在FragmentActivity中能获取到结果，但是requestCode完全对应不上 </p>
+<blockquote>
+<p>如果是Fragment发起的请求，那么在FragmentActivity.onActivityResult获取到的requestCode，其实是经过映射之后一个的大于0xffff的值，已经不是最初Fragment发请求时的requestCode了。</p>
+</blockquote>
+</li>
+</ol>
+<h1 id="5-思考"><a href="#5-思考" class="headerlink" title="5. 思考"></a>5. 思考</h1><p>为什么要用映射requestCode的方法来区分请求是否来自Fragment呢？绕这么一个弯子，直接使用一个变量来标记不行么？</p>
+<blockquote>
+<p>直接使用一个变量来标记还真不行：</p>
+<ul>
+<li>因为我们自己最终写业务代码MyFragmentActivity肯定是继承自FragmentActivity的，而MyFragmentActivity.onActivityResult的调用会先于FragmentActivity.onActivityResult。</li>
+<li>所以无论是Fragment还是MyFragmentActivity所发起的startActivityForResult请求，最终在获取结果的时候是一定是会通过MyFragmentActivity.onActivityResult的。</li>
+<li>如果在这里使用一个变量来标记请求的来源，那实质上就是依赖于开发者自己来判断——这是繁琐而且不可控的。</li>
+<li>而相比较而言，使用一个简单的映射规则，就能把来自Fragment的请求和来自FragmentActivity自身请求区分开来——十分简单可靠。</li>
+</ul>
+</blockquote>
+<h1 id="6-总结"><a href="#6-总结" class="headerlink" title="6. 总结"></a>6. 总结</h1><ol>
+<li>使用startActivityForResult的时候，requestCode一定不要大于0xffff(65535)。</li>
+<li>如果希望在Fragment的onActivityResult接收数据，就要调用Fragment.startActivityForResult，而不是Fragment.getActivity().startActivityForResult。</li>
+<li>看源码果然是学习的好方法~</li>
+<li>Google的工程师果然牛逼。</li>
+</ol>
+<hr>
+<p>关于作者 :<br><a href="http://www.barryzhang.com" target="_blank" rel="external">http://www.barryzhang.com</a><br><a href="https://github.com/barryhappy" target="_blank" rel="external">https://github.com/barryhappy</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;1-前言&quot;&gt;&lt;a href=&quot;#1-前言&quot; class=&quot;headerlink&quot; title=&quot;1. 前言&quot;&gt;&lt;/a&gt;1. 前言&lt;/h1&gt;&lt;p&gt;Activity、FragmentActivity、Fragment中都有&lt;code&gt;startActivityForResult()&lt;/code&gt;方法，也都有用以接收结果的&lt;code&gt;onActivityResult()&lt;/code&gt;方法，那他们有什么区别吗？用法上有什么不同吗？&lt;/p&gt;
+&lt;p&gt;之所以注意到这个问题，是因为最近一次在Fragment中使用了getActivity().startActivityForResult()去调用图片选择器，结果发现在Fragment的onActivityResult无法接收到返回的结果。&lt;/p&gt;
+&lt;p&gt;仔细研究了一下原因，发现了一些以前没注意到的问题，于是写出来分享给大家。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Android Fragment startActivityForResult" scheme="http://barryhappy.github.io/tags/Android-Fragment-startActivityForResult/"/>
+    
+  </entry>
   
   <entry>
     <title>Android爬坑之旅：软键盘挡住输入框问题的终极解决方案</title>
