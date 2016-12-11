@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://barryhappy.github.io/"/>
-  <updated>2016-11-19T05:07:57.000Z</updated>
+  <updated>2016-12-11T16:49:10.000Z</updated>
   <id>http://barryhappy.github.io/</id>
   
   <author>
@@ -14,6 +14,69 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>如何用Canvas画一个正多边形</title>
+    <link href="http://barryhappy.github.io/2016/12/12/how-to-draw-ploygon-with-canvas/"/>
+    <id>http://barryhappy.github.io/2016/12/12/how-to-draw-ploygon-with-canvas/</id>
+    <published>2016-12-11T16:47:47.000Z</published>
+    <updated>2016-12-11T16:49:10.000Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h1><p>给定一个指定的正方形的区域，要求在该区域内画一个正N边形（正三角形、正方形、正五边形……）<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">drawPolygon</span> <span class="params">(RectF rect, Canvas canvas, Paint p, <span class="keyword">int</span> n)</span> </span>&#123;</div><div class="line">    <span class="comment">// draw……</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><p>要用到一些三角函数的知识，于是我画了一幅灵魂画作👻：<br><img src="http://upload-images.jianshu.io/upload_images/422451-c95bb6d9c5b7064c.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="灵魂画作"></p>
+<p>分析：</p>
+<ul>
+<li>计算出每个顶点的坐标，然后把它们连起来，就是一个正多边形啦~</li>
+<li>圆心角a的度数为<code>360/n</code>，弧度计算为<code>2π/n</code>。</li>
+<li>如果把圆心的坐标为(0,0)，那么顶点P1的坐标为<code>[X1=cos(a),Y1=sin(a)]</code>。</li>
+<li>以此类推，顶点Pn坐标为<code>[Xn=cos(a*n),Yn=sin(a*n)]</code>。</li>
+<li>圆心的实际坐标是外接矩形的中心：<code>[Ox=(rect.right+rect.left)/2 , Oy=(rect.top+rect.bottom)/2]</code>。</li>
+<li>所以Pn的实际坐标是<code>[Xn+Ox,Yn+Oy]</code>。</li>
+<li>把P0-P1…Pn连起来就是我们要的结果了。 </li>
+<li>Java中可以使用<code>Path</code>来保存路径，最后使用<code>canvas.drawPath</code>来绘制出来。</li>
+</ul>
+<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><p>简化的伪代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">float</span> a = <span class="number">2</span>π / n ; <span class="comment">// 角度</span></div><div class="line">Path path = <span class="keyword">new</span> Path();</div><div class="line"><span class="keyword">for</span>( <span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= n; i++ )&#123;</div><div class="line">    <span class="keyword">float</span> x = R * cos(a * i); </div><div class="line">    <span class="keyword">float</span> y = R * sin(a * i);</div><div class="line">    <span class="keyword">if</span> (i = <span class="number">0</span>)&#123;</div><div class="line">        path.moveTo(x,y); <span class="comment">// 移动到第一个顶点   </span></div><div class="line">    &#125;<span class="keyword">else</span>&#123;</div><div class="line">        path.lineTo(x,y); <span class="comment">//    </span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">drawPath(path);</div></pre></td></tr></table></figure>
+<p>Java代码最终的完整代码，可以直接拿去用：</p>
+<pre><code class="java">
+<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">drawPolygon</span> <span class="params">(RectF rect, Canvas canvas, Paint paintByLevel, <span class="keyword">int</span> number)</span> </span>{
+    <span class="keyword">if</span>(number &lt; <span class="number">3</span>) {
+        <span class="keyword">return</span>;
+    }
+    <span class="keyword">float</span> r = (rect.right - rect.left) / <span class="number">2</span>;
+    <span class="keyword">float</span> mX = (rect.right + rect.left) / <span class="number">2</span>;
+    <span class="keyword">float</span> my = (rect.top + rect.bottom) / <span class="number">2</span>;
+    Path path = <span class="keyword">new</span> Path();
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= number; i++) {
+        <span class="comment">// - 0.5 : Turn 90 ° counterclockwise</span>
+        <span class="keyword">float</span> alpha = Double.valueOf(((<span class="number">2f</span> / number) * i - <span class="number">0.5</span>) * Math.PI).floatValue();
+        <span class="keyword">float</span> nextX = mX + Double.valueOf(r * Math.cos(alpha)).floatValue();
+        <span class="keyword">float</span> nextY = my + Double.valueOf(r * Math.sin(alpha)).floatValue();
+        <span class="keyword">if</span> (i == <span class="number">0</span>) {
+            path.moveTo(nextX, nextY);
+        } <span class="keyword">else</span> {
+            path.lineTo(nextX, nextY);
+        }
+    }
+    canvas.drawPath(path, paintByLevel);
+}
+</code></pre>
+<p>#DEMO</p>
+<p>这个项目里用到了这个函数，可以点进去看以及下载demo。<br><a href="https://github.com/barryhappy/TContributionsView" target="_blank" rel="external">https://github.com/barryhappy/TContributionsView</a>      </p>
+<p><img src="http://upload-images.jianshu.io/upload_images/422451-16c3e1e997944f51.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="DEMO"></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;场景&quot;&gt;&lt;a href=&quot;#场景&quot; class=&quot;headerlink&quot; title=&quot;场景&quot;&gt;&lt;/a&gt;场景&lt;/h1&gt;&lt;p&gt;给定一个指定的正方形的区域，要求在该区域内画一个正N边形（正三角形、正方形、正五边形……）&lt;br&gt;&lt;figure class=&quot;highlight java&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;drawPolygon&lt;/span&gt; &lt;span class=&quot;params&quot;&gt;(RectF rect, Canvas canvas, Paint p, &lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; n)&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// draw……&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;#125;&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Android Canvas" scheme="http://barryhappy.github.io/tags/Android-Canvas/"/>
+    
+  </entry>
   
   <entry>
     <title>彻底搞懂startActivityForResult在FragmentActivity和Fragment中的异同</title>
