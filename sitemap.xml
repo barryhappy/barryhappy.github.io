@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://barryhappy.github.io/2017/06/05/kotlin-and-findviewbyid/</loc>
+    
+    <lastmod>2017-06-05T15:49:36.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://barryhappy.github.io/2016/12/12/how-to-draw-ploygon-with-canvas/</loc>
     
     <lastmod>2016-12-11T16:49:10.000Z</lastmod>

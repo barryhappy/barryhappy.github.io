@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://barryhappy.github.io/"/>
-  <updated>2016-12-11T16:49:10.000Z</updated>
+  <updated>2017-06-05T15:49:36.000Z</updated>
   <id>http://barryhappy.github.io/</id>
   
   <author>
@@ -14,6 +14,61 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Kotlin 跟 findViewById 的类型推导冲突问题</title>
+    <link href="http://barryhappy.github.io/2017/06/05/kotlin-and-findviewbyid/"/>
+    <id>http://barryhappy.github.io/2017/06/05/kotlin-and-findviewbyid/</id>
+    <published>2017-06-05T15:42:22.000Z</published>
+    <updated>2017-06-05T15:49:36.000Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote>
+<p>记录一个小坑 </p>
+</blockquote>
+<h1 id="1-描述"><a href="#1-描述" class="headerlink" title="1 描述"></a>1 描述</h1><p>从 version 26 开始，com.android.support:appcompat-v7 中的 <code>findViewById</code> 方法的返回值从 <code>View</code> 改成了 <code>&lt;T extends View&gt;</code>。 </p>
+<p>对于开发者来说，喜大普奔的好处当然是以后终于可以不用在每个 finViewById 方法前面加个丑陋的类型强转了。 但是福兮祸兮，好事的背后也难免会有一些不如意的地方。<br><a id="more"></a><br>比如，如果你在用 Kotlin 的话，项目中可能会有很多类似这样的代码：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 代码 1 </span></div><div class="line"><span class="keyword">val</span> textView = findViewById(R.id.textView) <span class="keyword">as</span> TextView</div></pre></td></tr></table></figure>
+<p>这是 Kotlin 的习惯写法，种写法实际上是跟下面这种写法是等价的</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 代码 2</span></div><div class="line"><span class="keyword">val</span> textView : TextView = findViewById(R.id.textView) <span class="keyword">as</span> TextView</div></pre></td></tr></table></figure>
+<p>由于 Kotlin 的<code>类型推导</code>特性，我们可以在声明 textView 变量的时候不必显式说明，系统会自动从后面的赋值语句中推测出它的类型是 TextView 。</p>
+<p>但是在 version 26 之后，<em>代码 1</em> 的这种写法就会报错了：</p>
+<blockquote>
+<p>Type inference failed: Not enough information to infer parameter T in<br><strong>fun <t: view!=""> findViewById ( id: Int ) : T!</t:></strong><br>Please specify it explicitly</p>
+</blockquote>
+<p><img src="/images/14963205007134.jpg" alt="报错信息"></p>
+<p>意思是没有足够的信息来推断 findViewById 的返回类型。</p>
+<h1 id="2-原因"><a href="#2-原因" class="headerlink" title="2 原因"></a>2 原因</h1><p>上述错误的本质是<code>类型推导</code>的冲突。 </p>
+<p>如上所说，我们对 textView 的定义并没有说明其类型，它的类型是从后面的赋值语句中推导出来的。<br>而新版本的 findViewById ，其返回类型是<code>&lt;T extends View&gt;</code>，这是一个泛型的声明，具体类型则是根据所赋值的变量类型来确定的。</p>
+<p>—— 等号的左右两边互相依赖，互相还都没有指明，可不就冲突报错了么！</p>
+<h1 id="3-解决方案："><a href="#3-解决方案：" class="headerlink" title="3 解决方案："></a>3 解决方案：</h1><p>既然是因为『两个相互依赖的类行推导都没有指明类型』，那解决方案自然就是选其中一个指明类型咯。 </p>
+<h2 id="3-1"><a href="#3-1" class="headerlink" title="3.1"></a>3.1</h2><p>在等号左边声明类型：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 代码 3</span></div><div class="line"><span class="keyword">val</span> textView : TextView = findViewById(R.id.textView)</div></pre></td></tr></table></figure>
+<h2 id="3-2"><a href="#3-2" class="headerlink" title="3.2"></a>3.2</h2><p>在等号右边表明类型。<br>诸如这种带泛型签名的函数也是可以在调用时显式地指明类型的：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 代码 4</span></div><div class="line"><span class="keyword">val</span> textView = findViewById&lt;TextView&gt;(R.id.textView)</div></pre></td></tr></table></figure>
+<h1 id="4-总结"><a href="#4-总结" class="headerlink" title="4 总结"></a>4 总结</h1><ol>
+<li><p>这只是个很简单的小问题，很好解决，但是了解其本质的过程才是更让人享受的过程~</p>
+</li>
+<li><p>有意思的是：As 默认支持 Kotlin 跟 findViewById 更新这两件事 —— 都是在这次的 IO 大会上宣布的。而且现在（2017.06.05）用 AS 新建一个项目并开启 Kotlin 支持，然后把 support-v7 包升级到 26，就会发现默认的页面就会报这个错 🙈…… 希望 Google 能早日改正~</p>
+</li>
+</ol>
+<hr>
+<p>关于作者 :<br><a href="http://www.barryzhang.com" target="_blank" rel="external">http://www.barryzhang.com</a><br><a href="https://github.com/barryhappy" target="_blank" rel="external">https://github.com/barryhappy</a><br><a href="http://www.jianshu.com/users/e4607fd59d0d" target="_blank" rel="external">http://www.jianshu.com/users/e4607fd59d0d</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;记录一个小坑 &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1 id=&quot;1-描述&quot;&gt;&lt;a href=&quot;#1-描述&quot; class=&quot;headerlink&quot; title=&quot;1 描述&quot;&gt;&lt;/a&gt;1 描述&lt;/h1&gt;&lt;p&gt;从 version 26 开始，com.android.support:appcompat-v7 中的 &lt;code&gt;findViewById&lt;/code&gt; 方法的返回值从 &lt;code&gt;View&lt;/code&gt; 改成了 &lt;code&gt;&amp;lt;T extends View&amp;gt;&lt;/code&gt;。 &lt;/p&gt;
+&lt;p&gt;对于开发者来说，喜大普奔的好处当然是以后终于可以不用在每个 finViewById 方法前面加个丑陋的类型强转了。 但是福兮祸兮，好事的背后也难免会有一些不如意的地方。&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="kotlin android findViewById" scheme="http://barryhappy.github.io/tags/kotlin-android-findViewById/"/>
+    
+  </entry>
   
   <entry>
     <title>如何用Canvas画一个正多边形</title>
